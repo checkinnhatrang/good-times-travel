@@ -829,35 +829,18 @@ const vinPrices={standard:[1050000,800000,800000],after16:[700000,550000,550000]
 function calcVin(){const type=document.getElementById('vinType')?.value||'standard', a=+(document.getElementById('vinAdult')?.value||0), c=+(document.getElementById('vinChild')?.value||0), s=+(document.getElementById('vinSenior')?.value||0);const p=vinPrices[type];const total=a*p[0]+c*p[1]+s*p[2];const el=document.getElementById('vinTotal');if(el)el.textContent=money(total);const h=document.getElementById('vinHint');if(h)h.textContent=`Tạm tính ${a} người lớn + ${c} trẻ em + ${s} khách ≥60 tuổi. Dưới 100cm miễn phí. Giá cần xác nhận lại khi đặt.`;return total}
 ['vinType','vinAdult','vinChild','vinSenior','vinFree'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcVin));
 function gttValue(id){const el=document.getElementById(id);return el?(el.value||'').trim():''}
-function gttCopy(text){
-  if(navigator.clipboard&&window.isSecureContext) return navigator.clipboard.writeText(text).then(()=>true).catch(()=>gttCopyFallback(text));
-  return Promise.resolve(gttCopyFallback(text));
-}
-function gttCopyFallback(text){
-  const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
-  ta.style.position='fixed';ta.style.left='12px';ta.style.right='12px';ta.style.bottom='20px';ta.style.width='calc(100% - 24px)';ta.style.height='180px';ta.style.zIndex='999999';
-  document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);
-  let ok=false;try{ok=document.execCommand('copy')}catch(e){};
-  return ok;
-}
-function gttOpenZalo(text){
-  let modal=document.getElementById('gtt-booking-copy-modal');
-  if(modal) modal.remove();
-  modal=document.createElement('div');modal.id='gtt-booking-copy-modal';
-  modal.style.cssText='position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
-  const card=document.createElement('div');card.style.cssText='background:#fff;color:#172033;width:min(560px,100%);max-height:92dvh;overflow:auto;border-radius:18px;padding:18px;box-sizing:border-box;box-shadow:0 12px 50px rgba(0,0,0,.35);font-family:Arial,sans-serif;';
-  const title=document.createElement('h3');title.textContent='Yêu cầu đặt dịch vụ đã sẵn sàng';title.style.cssText='margin:0 0 8px;font-size:20px;';
-  const info=document.createElement('p');info.textContent='Bước 1: bấm “Sao chép nội dung”. Bước 2: mở Zalo, vào Nhắn tin với GOOD TIMES TRAVEL và dán nội dung vào khung chat rồi gửi.';info.style.cssText='font-size:14px;line-height:1.5;margin:0 0 12px;';
-  const area=document.createElement('textarea');area.value=text;area.setAttribute('aria-label','Nội dung đặt dịch vụ');area.style.cssText='width:100%;height:220px;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:12px;font-size:14px;line-height:1.45;color:#172033;background:#f8fafc;';
-  const status=document.createElement('p');status.textContent='Nếu sao chép tự động không được, nhấn giữ nội dung trong ô trên, chọn Tất cả rồi Sao chép.';status.style.cssText='font-size:13px;line-height:1.4;color:#475569;margin:8px 0 12px;';
-  const buttons=document.createElement('div');buttons.style.cssText='display:flex;gap:8px;flex-wrap:wrap;';
-  const copy=document.createElement('button');copy.type='button';copy.textContent='📋 Sao chép nội dung';copy.style.cssText='flex:1;min-width:150px;border:0;border-radius:10px;background:#087b45;color:white;padding:13px 12px;font-size:15px;font-weight:700;';
-  const open=document.createElement('button');open.type='button';open.textContent='💬 Mở Zalo';open.style.cssText='flex:1;min-width:120px;border:0;border-radius:10px;background:#0068ff;color:white;padding:13px 12px;font-size:15px;font-weight:700;';
-  const close=document.createElement('button');close.type='button';close.textContent='Đóng';close.style.cssText='border:1px solid #cbd5e1;border-radius:10px;background:white;color:#334155;padding:13px 16px;font-size:15px;';
-  copy.addEventListener('click',async()=>{let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);ok=true}else{area.focus();area.select();area.setSelectionRange(0,area.value.length);ok=document.execCommand('copy')}}catch(e){};status.textContent=ok?'Đã sao chép! Mở Zalo, bấm Nhắn tin, chạm vào khung chat và chọn Dán.':'Chưa sao chép tự động được. Nhấn giữ nội dung trong ô, chọn Tất cả → Sao chép, rồi mở Zalo.';area.focus();area.select();});
-  open.addEventListener('click',()=>{window.open('https://zalo.me/lelinhgoodtimes','_blank','noopener');status.textContent='Trong Zalo, bấm Nhắn tin nếu cần, sau đó nhấn giữ khung chat và chọn Dán rồi Gửi.';});
-  close.addEventListener('click',()=>modal.remove());
-  buttons.append(copy,open,close);card.append(title,info,area,status,buttons);modal.append(card);document.body.append(modal);area.focus();area.select();
+function gttCopy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(()=>true).catch(()=>gttCopyFallback(text));return Promise.resolve(gttCopyFallback(text))}
+function gttCopyFallback(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}ta.remove();return ok}
+async function gttOpenZalo(text){
+  /* Copy the booking request first, then open the direct GOOD TIMES TRAVEL Zalo chat.
+     Browsers cannot safely prefill/send a private Zalo message from a static page. */
+  let copied = false;
+  try { copied = await gttCopy(text); } catch(e) { copied = false; }
+  const chatUrl = 'https://zalo.me/lelinhgoodtimes';
+  showToast(copied
+    ? 'Đã sao chép nội dung yêu cầu. Đang mở chat GOOD TIMES TRAVEL; anh/chị chỉ cần DÁN nội dung và bấm Gửi.'
+    : 'Đang mở chat GOOD TIMES TRAVEL. Nếu nội dung chưa được sao chép, hãy quay lại trang và dùng nút Sao chép yêu cầu.');
+  window.location.href = chatUrl;
 }
 function submitCatalog(type){let lines=['YÊU CẦU DỊCH VỤ GOOD TIMES TRAVEL','Họ tên: (vui lòng bổ sung)','Điện thoại: (vui lòng bổ sung)'];if(type==='island'){lines.push('Dịch vụ: Tour 3 đảo Nha Trang','Số khách: '+gttValue('isGuests'),'Loại phương tiện: '+gttValue('isCano'),'Ngày đi: '+(gttValue('isDate')||'Chưa chọn'),'Điểm đón: '+(gttValue('isPickup')||'Chưa cung cấp'),'Ghi chú: '+(gttValue('isNote')||'Không có'),'Giá: Xin báo giá theo lịch trình');remoteEvent('catalog_lead',{category:'tour',item_id:'t1',item_name:'Tour 3 đảo Nha Trang'});}else if(type==='vin'){const total=calcVin();lines.push('Dịch vụ: Vé VinWonders Nha Trang','Loại vé: '+gttValue('vinType'),'Ngày đi: '+(gttValue('vinDate')||'Chưa chọn'),'Người lớn: '+gttValue('vinAdult'),'Trẻ em: '+gttValue('vinChild'),'Khách từ 60 tuổi: '+gttValue('vinSenior'),'Trẻ dưới 100cm: '+gttValue('vinFree'),'Tạm tính tham khảo: '+money(total),'Lưu ý: xác nhận lại giá trước khi thanh toán');remoteEvent('catalog_lead',{category:'ticket',item_id:'vinwonders',item_name:'VinWonders Nha Trang',value:total});}else{lines.push('Dịch vụ: Xe du lịch','Loại xe: '+gttValue('carSeat'),'Ngày đi: '+(gttValue('carDate')||'Chưa chọn'),'Giờ đón: '+(gttValue('carTime')||'Chưa chọn'),'Điểm đón: '+(gttValue('carPickup')||'Chưa cung cấp'),'Điểm đến: '+(gttValue('carDrop')||'Chưa cung cấp'),'Chiều xe: '+gttValue('carTrip'),'Ghi chú: '+(gttValue('carNote')||'Không có'),'Giá: Xin báo giá theo lịch trình');remoteEvent('vehicle_request',{category:'vehicle',item_id:gttValue('carSeat'),item_name:'Xe du lịch '+gttValue('carSeat')});}lines.push('Website: '+location.href,'Vui lòng tư vấn và xác nhận dịch vụ.');incGt('lead');gttOpenZalo(lines.join('\n'));}
 function exportAnalytics(){const o=gtStats();const rows=[['Chỉ số','Giá trị'],['Lượt mở website',o.views||0],['Lượt mở catalog',o.catalog||0],['Click Zalo',o.zalo||0],['Click gọi điện',o.phone||0],['Click trang tham khảo',o.ref||0],['Yêu cầu đã tạo',o.lead||0],['Trình duyệt đã ghé',o.uniqueBrowsers||0],['Phiên',o.sessions||0],['Tương tác gần nhất',o.last||'']];const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='good-times-thong-ke.csv';a.click();URL.revokeObjectURL(a.href)}
@@ -893,7 +876,7 @@ function sendFormToZalo(){
   const lines=['YÊU CẦU TƯ VẤN GOOD TIMES TRAVEL','Họ tên: '+(d.get('name')||''),'Số điện thoại: '+(d.get('phone')||''),'Ngày dự kiến: '+(d.get('date')||'Chưa chọn'),'Số khách: '+(d.get('guests')||'Chưa cung cấp'),'Dịch vụ: '+(d.get('service')||''),'Ghi chú: '+(d.get('note')||'Không có'),'Website: '+location.href,'Vui lòng liên hệ tư vấn và xác nhận giá.'];
   incGt('lead');
   remoteEvent('generate_lead',{category:'lead',item_name:String(d.get('service')||'Yêu cầu tư vấn')});
-  gttOpenZalo(lines.join('\n'));
+  gttOpenZalo(lines.join('\\n'));
 }
 document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();const f=e.currentTarget;const d=new FormData(f);const lines=['YÊU CẦU TƯ VẤN GOOD TIMES TRAVEL','Họ tên: '+(d.get('name')||''),'Số điện thoại: '+(d.get('phone')||''),'Ngày dự kiến: '+(d.get('date')||'Chưa chọn'),'Số khách: '+(d.get('guests')||'Chưa cung cấp'),'Dịch vụ: '+(d.get('service')||''),'Ghi chú: '+(d.get('note')||'Không có'),'Website: '+location.href,'Vui lòng liên hệ tư vấn và xác nhận giá.'];document.getElementById('success').style.display='block';document.getElementById('success').textContent='Đã tạo nội dung yêu cầu. Chọn Zalo trong bảng chia sẻ, rồi bấm Gửi trong Zalo để nhân viên nhận được tin nhắn.';incGt('lead');remoteEvent('generate_lead',{category:'lead',item_name:String(d.get('service')||'Yêu cầu tư vấn')});gttOpenZalo(lines.join('\n'));});
 function isPublicWebUrl(){return /^https?:$/i.test(location.protocol)}
