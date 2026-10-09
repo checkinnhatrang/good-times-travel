@@ -278,6 +278,11 @@ img{display:block;max-width:100%;height:auto}
   .vehicle-img{height:185px}
 }
 </style>
+<meta property="og:type" content="website">
+<meta property="og:title" content="GOOD TIMES TRAVEL • Tour • Khách sạn & Resort • Nha Trang">
+<meta property="og:description" content="Tour biển đảo, cano, khách sạn & resort, vé vui chơi và xe du lịch 4–45 chỗ tại Nha Trang – Khánh Hòa.">
+<meta property="og:site_name" content="GOOD TIMES TRAVEL">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="top"><div class="wrap"><span>GOOD TIMES TRAVEL • Trân Trọng Từng Khoảnh Khắc</span><span>☎ 0977 199 917 • 0777 199 917</span></div></div>
@@ -746,7 +751,7 @@ img{display:block;max-width:100%;height:auto}
 <label class="full">Bạn cần dịch vụ gì?<select name="service"><option>Tour biển đảo / Cano</option><option>Khách sạn / Resort</option><option>Tour + Khách sạn + Xe</option><option>Vé VinWonders / I-Resort / Hòn Tằm</option><option>Xe đưa đón</option><option>Tour đoàn / doanh nghiệp</option></select></label>
 <label class="full">Ghi chú<textarea name="note" placeholder="Ví dụ: gia đình 4 người, muốn phòng view biển + tour 3 đảo..."></textarea></label>
 <div class="success full" id="success">Đã ghi nhận yêu cầu trên trang. Vui lòng bấm Zalo bên cạnh để gửi nhanh cho GOOD TIMES TRAVEL.</div>
-<div class="full" style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn primary" type="submit">Gửi yêu cầu</button><a class="btn goldbtn" href="https://zalo.me/0977199917" data-track="zalo" target="_blank">💬 Gửi Zalo trực tiếp</a></div>
+<div class="full" style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn primary" type="submit">Gửi yêu cầu</button><button class="btn goldbtn" type="button" data-track="zalo" onclick="sendFormToZalo()">💬 Gửi yêu cầu qua Zalo</button></div>
 </form>
 </div>
 </section>
@@ -813,13 +818,33 @@ function money(n){return new Intl.NumberFormat('vi-VN').format(n)+'đ'}
 const vinPrices={standard:[1050000,800000,800000],after16:[700000,550000,550000],'2day':[1350000,1050000,1050000],'3day':[1600000,1200000,1200000]};
 function calcVin(){const type=document.getElementById('vinType')?.value||'standard', a=+(document.getElementById('vinAdult')?.value||0), c=+(document.getElementById('vinChild')?.value||0), s=+(document.getElementById('vinSenior')?.value||0);const p=vinPrices[type];const total=a*p[0]+c*p[1]+s*p[2];const el=document.getElementById('vinTotal');if(el)el.textContent=money(total);const h=document.getElementById('vinHint');if(h)h.textContent=`Tạm tính ${a} người lớn + ${c} trẻ em + ${s} khách ≥60 tuổi. Dưới 100cm miễn phí. Giá cần xác nhận lại khi đặt.`;return total}
 ['vinType','vinAdult','vinChild','vinSenior','vinFree'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcVin));
-function submitCatalog(type){incGt('lead');if(type==='island'){/* quote */}else if(type==='vin'){calcVin()}showToast('Đã tạo yêu cầu. Vui lòng gửi tiếp qua Zalo để GOOD TIMES xác nhận.');window.open('https://zalo.me/0977199917','_blank')}
+function gttValue(id){const el=document.getElementById(id);return el?(el.value||'').trim():''}
+function gttCopy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(()=>true).catch(()=>gttCopyFallback(text));return Promise.resolve(gttCopyFallback(text))}
+function gttCopyFallback(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}ta.remove();return ok}
+async function gttOpenZalo(text){
+  /* On supported phones, open the native share sheet so the customer can choose Zalo and share the request text. Browsers do not allow a website to send a Zalo message silently. */
+  try {
+    if (navigator.share) {
+      await navigator.share({title:'Yêu cầu GOOD TIMES TRAVEL', text:text, url:location.href});
+      showToast('Đã mở bảng chia sẻ. Chọn Zalo, sau đó bấm Gửi trong Zalo để hoàn tất.');
+      return;
+    }
+  } catch(e) {
+    if (e && e.name === 'AbortError') return;
+  }
+  const copied = await gttCopy(text);
+  const opened = window.open('https://zalo.me/0977199917','_blank');
+  showToast(copied ? 'Đã sao chép nội dung yêu cầu. Trong Zalo, mở chat GOOD TIMES TRAVEL và DÁN rồi bấm Gửi.' : 'Zalo đã được mở. Hãy quay lại trang, sao chép nội dung yêu cầu và dán vào Zalo.');
+}
+function submitCatalog(type){let lines=['YÊU CẦU DỊCH VỤ GOOD TIMES TRAVEL','Họ tên: (vui lòng bổ sung)','Điện thoại: (vui lòng bổ sung)'];if(type==='island'){lines.push('Dịch vụ: Tour 3 đảo Nha Trang','Số khách: '+gttValue('isGuests'),'Loại phương tiện: '+gttValue('isCano'),'Ngày đi: '+(gttValue('isDate')||'Chưa chọn'),'Điểm đón: '+(gttValue('isPickup')||'Chưa cung cấp'),'Ghi chú: '+(gttValue('isNote')||'Không có'),'Giá: Xin báo giá theo lịch trình');remoteEvent('catalog_lead',{category:'tour',item_id:'t1',item_name:'Tour 3 đảo Nha Trang'});}else if(type==='vin'){const total=calcVin();lines.push('Dịch vụ: Vé VinWonders Nha Trang','Loại vé: '+gttValue('vinType'),'Ngày đi: '+(gttValue('vinDate')||'Chưa chọn'),'Người lớn: '+gttValue('vinAdult'),'Trẻ em: '+gttValue('vinChild'),'Khách từ 60 tuổi: '+gttValue('vinSenior'),'Trẻ dưới 100cm: '+gttValue('vinFree'),'Tạm tính tham khảo: '+money(total),'Lưu ý: xác nhận lại giá trước khi thanh toán');remoteEvent('catalog_lead',{category:'ticket',item_id:'vinwonders',item_name:'VinWonders Nha Trang',value:total});}else{lines.push('Dịch vụ: Xe du lịch','Loại xe: '+gttValue('carSeat'),'Ngày đi: '+(gttValue('carDate')||'Chưa chọn'),'Giờ đón: '+(gttValue('carTime')||'Chưa chọn'),'Điểm đón: '+(gttValue('carPickup')||'Chưa cung cấp'),'Điểm đến: '+(gttValue('carDrop')||'Chưa cung cấp'),'Chiều xe: '+gttValue('carTrip'),'Ghi chú: '+(gttValue('carNote')||'Không có'),'Giá: Xin báo giá theo lịch trình');remoteEvent('vehicle_request',{category:'vehicle',item_id:gttValue('carSeat'),item_name:'Xe du lịch '+gttValue('carSeat')});}lines.push('Website: '+location.href,'Vui lòng tư vấn và xác nhận dịch vụ.');incGt('lead');gttOpenZalo(lines.join('\n'));}
 function exportAnalytics(){const o=gtStats();const rows=[['Chỉ số','Giá trị'],['Lượt mở website',o.views||0],['Lượt mở catalog',o.catalog||0],['Click Zalo',o.zalo||0],['Click gọi điện',o.phone||0],['Click trang tham khảo',o.ref||0],['Yêu cầu đã tạo',o.lead||0],['Trình duyệt đã ghé',o.uniqueBrowsers||0],['Phiên',o.sessions||0],['Tương tác gần nhất',o.last||'']];const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='good-times-thong-ke.csv';a.click();URL.revokeObjectURL(a.href)}
 function resetAnalytics(){if(confirm('Đặt lại toàn bộ bộ đếm trên thiết bị này?')){localStorage.removeItem(GT_KEY);renderStats();showToast('Đã đặt lại bộ đếm.')}}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-track]');if(!a)return;const t=a.dataset.track;if(t==='zalo')incGt('zalo');if(t==='phone')incGt('phone');if(t==='reference')incGt('ref')});
 renderStats();gtVisitor();calcVin();
 renderTours();
 renderDetails();
+// Prevent accidental past-date requests in the booking widgets.
+(()=>{const today=new Date();const y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');const minDate=`${y}-${m}-${d}`;document.querySelectorAll('input[type="date"]').forEach(el=>{el.min=minDate;});})();
 document.getElementById("search").addEventListener("input",renderTours);
 document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));btn.classList.add("active");renderTours();}));
 
@@ -838,7 +863,16 @@ setTimeout(focusTourFromHash,120);
 
 document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("mobilePanel").classList.toggle("show"));
 document.querySelectorAll(".mobile-panel a").forEach(a=>a.addEventListener("click",()=>document.getElementById("mobilePanel").classList.remove("show")));
-document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();document.getElementById("success").style.display="block";});
+function sendFormToZalo(){
+  const f=document.getElementById('form');
+  if(!f.reportValidity()) return;
+  const d=new FormData(f);
+  const lines=['YÊU CẦU TƯ VẤN GOOD TIMES TRAVEL','Họ tên: '+(d.get('name')||''),'Số điện thoại: '+(d.get('phone')||''),'Ngày dự kiến: '+(d.get('date')||'Chưa chọn'),'Số khách: '+(d.get('guests')||'Chưa cung cấp'),'Dịch vụ: '+(d.get('service')||''),'Ghi chú: '+(d.get('note')||'Không có'),'Website: '+location.href,'Vui lòng liên hệ tư vấn và xác nhận giá.'];
+  incGt('lead');
+  remoteEvent('generate_lead',{category:'lead',item_name:String(d.get('service')||'Yêu cầu tư vấn')});
+  gttOpenZalo(lines.join('\\n'));
+}
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();const f=e.currentTarget;const d=new FormData(f);const lines=['YÊU CẦU TƯ VẤN GOOD TIMES TRAVEL','Họ tên: '+(d.get('name')||''),'Số điện thoại: '+(d.get('phone')||''),'Ngày dự kiến: '+(d.get('date')||'Chưa chọn'),'Số khách: '+(d.get('guests')||'Chưa cung cấp'),'Dịch vụ: '+(d.get('service')||''),'Ghi chú: '+(d.get('note')||'Không có'),'Website: '+location.href,'Vui lòng liên hệ tư vấn và xác nhận giá.'];document.getElementById('success').style.display='block';document.getElementById('success').textContent='Đã tạo nội dung yêu cầu. Chọn Zalo trong bảng chia sẻ, rồi bấm Gửi trong Zalo để nhân viên nhận được tin nhắn.';incGt('lead');remoteEvent('generate_lead',{category:'lead',item_name:String(d.get('service')||'Yêu cầu tư vấn')});gttOpenZalo(lines.join('\n'));});
 function isPublicWebUrl(){return /^https?:$/i.test(location.protocol)}
 function publicShareGuard(){if(isPublicWebUrl()) return true; alert('Website hiện đang mở từ file HTML trên máy nên mạng xã hội không thể đọc được nội dung để chia sẻ. Hãy đăng website lên tên miền/hosting công khai của GOOD TIMES TRAVEL trước.'); return false}
 function shareFB(){if(!publicShareGuard())return; remoteEvent('share_facebook',{category:'social'}); window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),'_blank','noopener,noreferrer')}
