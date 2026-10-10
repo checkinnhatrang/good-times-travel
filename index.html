@@ -293,6 +293,17 @@ img{display:block;max-width:100%;height:auto}
 <meta name="twitter:title" content="GOOD TIMES TRAVEL – Trân Trọng Từng Khoảnh Khắc">
 <meta name="twitter:description" content="Tour biển đảo, khách sạn, resort và xe du lịch tại Nha Trang.">
 <meta name="twitter:image" content="https://checkinnhatrang.github.io/good-times-travel/share-image.jpg">
+
+<!-- V20: tinh gon giao dien cong khai; giu nguyen logic dat dich vu va chia se -->
+<style id="gtt-v20-cleanup">
+/* Khu vực thống kê/quản trị không dành cho khách truy cập: ẩn khỏi giao diện công khai.
+   Không xóa mã kết nối để tránh ảnh hưởng các chức năng đang dùng. */
+#thong-ke, #quan-tri { display: none !important; }
+/* X/Twitter không cần thiết với cấu hình hiện tại; ẩn riêng nút chia sẻ, giữ nguyên các nút chính. */
+.share-inner button[onclick="shareX()"] { display: none !important; }
+/* Ẩn các liên kết menu dẫn tới khu vực quản trị đã ẩn. */
+a[href="#thong-ke"], a[href="#quan-tri"] { display: none !important; }
+</style>
 </head>
 <body>
 <div class="top"><div class="wrap"><span>GOOD TIMES TRAVEL • Trân Trọng Từng Khoảnh Khắc</span><span>☎ 0977 199 917 • 0777 199 917</span></div></div>
