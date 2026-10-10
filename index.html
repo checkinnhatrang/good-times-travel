@@ -137,6 +137,15 @@ footer{background:#022c44;color:#b7d5df;padding:44px 0 22px}.foot{display:grid;g
 @media(max-width:980px){.admin-grid{grid-template-columns:repeat(2,1fr)}.admin-columns{grid-template-columns:1fr}.social-connect{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.admin-grid{grid-template-columns:1fr}.social-connect{grid-template-columns:1fr}.admin-shell{padding:18px;border-radius:22px}.admin-top h3{font-size:23px}}
 
+
+.hero-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:2px}
+.hero-contact-col{display:grid;align-content:start;gap:10px;min-width:0}
+.hero-contact-heading{display:flex;align-items:center;gap:7px;color:var(--navy);font-size:12px;font-weight:950;letter-spacing:.07em;margin:2px 4px}
+.contact-mini{width:100%;box-sizing:border-box;padding:13px 9px;font-size:clamp(11px,2.6vw,14px);white-space:nowrap;gap:6px;border:1px solid #d7e6ea;background:#fff}
+.phone-icon{color:#e53935;font-size:22px;font-weight:950;line-height:1;display:inline-flex;align-items:center;justify-content:center}
+.zalo-icon{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;flex:0 0 23px;border-radius:50%;background:#087fca;color:#fff;font-family:Arial,sans-serif;font-size:14px;font-weight:950;line-height:1;box-shadow:0 2px 5px #087fca33}
+@media(max-width:380px){.hero-contact-grid{gap:8px}.contact-mini{padding:11px 5px;font-size:10px;gap:4px}.hero-contact-heading{font-size:11px}}
+
 </style>
 <style id="mobile-image-fix">
 img{display:block;max-width:100%;height:auto}
@@ -512,10 +521,18 @@ a[href="#thong-ke"], a[href="#quan-tri"] { display: none !important; }
 <div class="actions">
 <a class="btn primary" href="#tour">🏝️ Khám phá tour</a>
 <a class="btn goldbtn" href="#khach-san">🏨 Khách sạn &amp; Resort</a>
-<a class="btn light" href="tel:0977199917" data-track="phone">☎ Tư vấn: 0977 199 917</a>
-<a class="btn light" href="tel:0777199917" data-track="phone">☎ Tư vấn: 0777 199 917</a>
-<a class="btn light" href="https://zalo.me/84977199917" data-track="zalo" target="_blank" rel="noopener noreferrer">💬 Zalo 0977 199 917</a>
-<a class="btn light" href="https://zalo.me/84777199917" data-track="zalo" target="_blank" rel="noopener noreferrer">💬 Zalo 0777 199 917</a>
+<div class="hero-contact-grid" aria-label="Liên hệ nhanh">
+  <div class="hero-contact-col hero-phone-col">
+    <div class="hero-contact-heading"><span class="phone-icon" aria-hidden="true">☎</span> GỌI ĐIỆN</div>
+    <a class="btn light contact-mini" href="tel:0977199917" data-track="phone"><span class="phone-icon" aria-hidden="true">☎</span> 0977 199 917</a>
+    <a class="btn light contact-mini" href="tel:0777199917" data-track="phone"><span class="phone-icon" aria-hidden="true">☎</span> 0777 199 917</a>
+  </div>
+  <div class="hero-contact-col hero-zalo-col">
+    <div class="hero-contact-heading"><span class="zalo-icon" aria-hidden="true">Z</span> ZALO</div>
+    <a class="btn light contact-mini" href="https://zalo.me/84977199917" data-track="zalo" target="_blank" rel="noopener noreferrer"><span class="zalo-icon" aria-hidden="true">Z</span> 0977 199 917</a>
+    <a class="btn light contact-mini" href="https://zalo.me/84777199917" data-track="zalo" target="_blank" rel="noopener noreferrer"><span class="zalo-icon" aria-hidden="true">Z</span> 0777 199 917</a>
+  </div>
+</div>
 </div>
 <div class="trust">
 <span>✓ Tư vấn tại Nha Trang</span><span>✓ Đặt tour &amp; phòng</span><span>✓ Xe đưa đón</span><span>✓ Hỗ trợ đoàn</span>
