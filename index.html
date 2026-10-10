@@ -303,10 +303,29 @@ img{display:block;max-width:100%;height:auto}
 .share-inner button[onclick="shareX()"] { display: none !important; }
 /* Ẩn các liên kết menu dẫn tới khu vực quản trị đã ẩn. */
 a[href="#thong-ke"], a[href="#quan-tri"] { display: none !important; }
+
+/* Header quick contacts: phone and Zalo links */
+.top-contact .wrap{padding:7px 0;align-items:center}
+.top-contact-links{display:flex;align-items:center;justify-content:flex-end;gap:8px 14px;flex-wrap:wrap}
+.top-contact-links a{color:#eaf7fa;text-decoration:none;font-weight:750;white-space:nowrap}
+.top-contact-links a:hover{text-decoration:underline}
+@media(max-width:760px){
+ .top-contact .wrap{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+ .top-contact-links{justify-content:flex-start;gap:7px 12px}
+ .top-contact-links a{font-size:12px}
+}
 </style>
 </head>
 <body>
-<div class="top"><div class="wrap"><span>GOOD TIMES TRAVEL • Trân Trọng Từng Khoảnh Khắc</span><span>☎ 0977 199 917 • 0777 199 917</span></div></div>
+<div class="top top-contact"><div class="wrap">
+  <span class="top-brand">GOOD TIMES TRAVEL • Trân Trọng Từng Khoảnh Khắc</span>
+  <div class="top-contact-links" aria-label="Liên hệ nhanh">
+    <a href="tel:0977199917" data-track="phone">☎ 0977 199 917</a>
+    <a href="tel:0777199917" data-track="phone">☎ 0777 199 917</a>
+    <a href="https://zalo.me/84977199917" target="_blank" rel="noopener noreferrer" data-track="zalo">💬 Zalo 0977 199 917</a>
+    <a href="https://zalo.me/84777199917" target="_blank" rel="noopener noreferrer" data-track="zalo">💬 Zalo 0777 199 917</a>
+  </div>
+</div></div>
 <header>
 <div class="wrap">
 <div class="nav">
