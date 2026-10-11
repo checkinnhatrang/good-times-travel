@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://checkinnhatrang.github.io/good-times-travel/sitemap.xml
